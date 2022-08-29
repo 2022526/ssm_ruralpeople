@@ -26,4 +26,5 @@ Not allowed to load local resource: file:///
 
 
 这个项目在idea中集成了Git
+Git视频教程：https://www.bilibili.com/video/BV1vy4y1s7k6?p=31&spm_id_from=pageDriver&vd_source=11deba2afee23861162d2c5d31ef6f91
 
