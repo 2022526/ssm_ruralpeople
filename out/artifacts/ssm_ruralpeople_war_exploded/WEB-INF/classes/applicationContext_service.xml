@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--    1.设置业务逻辑层包扫描器,目的是在指定的包下,使用@service注解的类,spring负责创建对象,并添加依赖-->
+    <context:component-scan base-package="com.zyt.service"></context:component-scan>
+
+    <import resource="classpath:applicationContext-dao.xml" />
+
+    <!--    2.设置事务管理器-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--        配置数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--    3.设置事务的切面(或增强)-->
+    <tx:advice id="advice" transaction-manager="dataSourceTransactionManager">
+        <tx:attributes>
+            <!--设置哪些方法需要进行事务管理,propagation是事务的传播特性-->
+            <!--查询方法-->
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="search*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <!--增加方法-->
+            <tx:method name="save*" propagation="REQUIRED"></tx:method>
+            <tx:method name="add*" propagation="REQUIRED"></tx:method>
+            <tx:method name="insert*" propagation="REQUIRED"></tx:method>
+            <!--更新方法-->
+            <tx:method name="update*" propagation="REQUIRED"></tx:method>
+            <tx:method name="change*" propagation="REQUIRED"></tx:method>
+            <!--删除方法-->
+            <tx:method name="delete*" propagation="REQUIRED"></tx:method>
+            <!--当以上方法都不匹配时:设置为支持事务-->
+            <tx:method name="*" propagation="SUPPORTS"></tx:method>
+        </tx:attributes>
+
+    </tx:advice>
+
+    <!--    4.设置切面和切点的织入-->
+    <aop:config>
+        <!--        配置切点-->
+        <aop:pointcut id="pointcut" expression="execution(* com.zyt.service.*.*(..))"/>
+        <!--        织入-->
+        <aop:advisor advice-ref="advice" pointcut-ref="pointcut"></aop:advisor>
+    </aop:config>
+
+</beans>
