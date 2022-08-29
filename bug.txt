@@ -30,3 +30,4 @@ Git视频教程：https://www.bilibili.com/video/BV1vy4y1s7k6?p=31&spm_id_from=p
 master test
 hot-fix test
 修改后重新提交到GitHub远程库上面
+pull test
